@@ -11,7 +11,7 @@ build:
 	$(GOBUILD) -o $(WEBSERVICE_BINARY_NAME) -v $(WEBSERVICE_MAIN)
 test:
 	$(GOTEST) -v ./...
-clean:
-	rm -f $(BINARY_NAME)
 run:
 	./$(BINARY_NAME)
+docker-up:
+	MODE=dev docker-compose up --remove-orphans --build -d

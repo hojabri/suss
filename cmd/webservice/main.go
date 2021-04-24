@@ -36,7 +36,7 @@ func main() {
 		}
 	}()
 	
-	address := config.Config.GetString("WEBSERVICE.ADDRESS")
+	
 	port := config.Config.GetString("WEBSERVICE.PORT")
 	domain := config.Config.GetString("WEBSERVICE.DOMAIN")
 	enableAutoCert := config.Config.GetBool("WEBSERVICE.ENABLE_AUTOCERT")
@@ -47,14 +47,9 @@ func main() {
 	susslogger.Log().Infof("ENABLE_AUTOCERT:%v", enableAutoCert)
 	susslogger.Log().Infof("DOMAIN:%s", domain)
 	
-	setupConfig.Address = fmt.Sprintf("%s:%s", address, port)
+	setupConfig.Address = fmt.Sprintf(":%s", port)
 	setupConfig.InsecureHTTP = !enableAutoCert
-	var scheme string
-	if setupConfig.InsecureHTTP {
-		scheme = "http"
-	} else {
-		scheme = "https"
-	}
+
 	svc := &service.SUSSService{}
 	api := setup.NewServer(svc, &setupConfig)
 	
@@ -83,7 +78,8 @@ func main() {
 	
 	api.Routes.Static("/static", "./static")
 	api.Routes.Static("/openapi", "./openapi")
-	swaggerUrl := fmt.Sprintf("%s://%s:%s/openapi/suss-openapi.yml", scheme, address, port)
+
+	swaggerUrl := "/openapi/suss-openapi.yml"
 
 	// Place ReDoc file to render swagger specification document in the root GET of webservice
 	api.Routes.Get("/", func(ctx *fiber.Ctx) error {

@@ -1,6 +1,8 @@
 package maxmind
 
 import (
+	"fmt"
+	"github.com/hojabri/suss/pkg/config"
 	"github.com/hojabri/suss/pkg/entities"
 	"github.com/hojabri/suss/pkg/susslogger"
 	"github.com/oschwald/geoip2-golang"
@@ -10,7 +12,7 @@ var DB *geoip2.Reader
 var err error
 
 func OpenDB() error {
-	DB, err = geoip2.Open("geolitedb/GeoLite2-City.mmdb")
+	DB, err = geoip2.Open(fmt.Sprintf("geolitedb/%s",config.Config.GetString("GEODB")))
 	if err != nil {
 		return err
 	}

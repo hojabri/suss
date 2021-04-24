@@ -5,8 +5,8 @@ SUSPICIOUS_THRESHOLD: 500
 # Normal:       ignore accuracy radius
 # Pessimistic:  will add accuracy radius to distance
 DETECTION_MODE: "Optimistic"
+GEODB: GeoLite2-City.mmdb
 WEBSERVICE:
-  ADDRESS: 0.0.0.0
   PORT: 443
   DOMAIN: example.com
   ENABLE_AUTOCERT: true
