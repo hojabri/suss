@@ -42,12 +42,16 @@ definitions:
     properties:
       username:
         type: string
+        example: "Omid"
       unix_timestamp:
         type: integer
+        example: 1619268172
       event_uuid:
         type: string
+        example: "fa05a9bf-bf5c-4db2-88f7-dd764d2cf1f7"
       ip_address:
         type: string
+        example: "32.22.71.25"
   Geo:
     type: object
     properties:
