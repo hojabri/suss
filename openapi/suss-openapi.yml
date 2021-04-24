@@ -1,0 +1,102 @@
+swagger: "2.0"
+info:
+  title: SUSS
+  description: Suspicious user session system detector
+  version: 1.0.0
+host: localhost:5000
+basePath: /v1
+schemes:
+  - http
+  - https
+
+paths:
+  /event:
+    post:
+      description: new event
+      summary: New User Session Event
+      tags:
+        - Event
+      operationId: NewUserSessionEvent
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NewEvent'
+      responses:
+        200:
+          description: Endpoint informations
+          schema:
+            $ref: '#/definitions/ProcessResult'
+          headers: { }
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ProblemDetails"
+definitions:
+  NewEvent:
+    type: object
+    properties:
+      username:
+        type: string
+      unix_timestamp:
+        type: integer
+      event_uuid:
+        type: string
+      ip_address:
+        type: string
+  Geo:
+    type: object
+    properties:
+      lat:
+        type: number
+      lon:
+        type: number
+      radius:
+        type: integer
+  IpLog:
+    type: object
+    properties:
+      lat:
+        type: number
+      lon:
+        type: number
+      radius:
+        type: integer
+      speed:
+        type: number
+      ip:
+        type: string
+      timestamp:
+        type: integer
+  ProcessResult:
+    type: object
+    properties:
+      currentGeo:
+        $ref: "#/definitions/Geo"
+      travelToCurrentGeoSuspicious:
+        type: boolean
+      travelFromCurrentGeoSuspicious:
+        type: boolean
+      precedingIpAccess:
+        $ref: "#/definitions/IpLog"
+      subsequentIpAccess:
+        $ref: "#/definitions/IpLog"
+  ProblemDetails:
+    type: object
+    description: .noGorm.
+    properties:
+      type:
+        type: string
+      title:
+        type: string
+      status:
+        type: integer
+        format: int32
+      detail:
+        type: string
+      instance:
+        type: string

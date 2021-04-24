@@ -32,7 +32,6 @@ type Routes struct {
 func initializeRoutes() *Routes {
 	engine := html.New("./static", ".html")
 	engine.Reload(true)
-	engine.Debug(true)
 	engine.Layout("embed")
 	engine.Delims("{{", "}}")
 
@@ -89,7 +88,6 @@ func (s *Server) ConfigureRoutes() {
 }
 
 func (s *Server) configureRoutes() {
-	s.Routes.Get("/",do(index))
     s.Routes.Get("/ping",do(ping))
 
 	s.Routes.EventRoutes.Post("/", do(s.service.NewUserSessionEvent))
@@ -129,15 +127,7 @@ func ping(c *fiber.Ctx) *entities.Response {
 		Instance: "Health",
 	}
 }
-func index(c *fiber.Ctx) *entities.Response {
-	return &entities.Response{
-		Code:     http.StatusOK,
-		Body:     "SUSS index. Call POST to /v1/event (see documents for more info)",
-		Title:    "OK",
-		Message:  "",
-		Instance: "Index",
-	}
-}
+
 func (s *Server) Run() error {
 	
 	// configure service routes

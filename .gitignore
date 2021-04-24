@@ -5,3 +5,8 @@
 
 #binary
 susswebservice
+
+#db
+db/suss.db
+
+/gen/

@@ -16,14 +16,14 @@ import (
 var err error
 
 func main() {
-
+	
 	// Connect to db
 	
 	err = sqlite.Connect()
 	if err != nil {
 		susslogger.Log().Fatalf("Can not connect to sqllite db: %s", err.Error())
 	}
-
+	
 	// Connect to GeoLite2 db
 	err = maxmind.OpenDB()
 	if err != nil {
@@ -41,17 +41,20 @@ func main() {
 	domain := config.Config.GetString("WEBSERVICE.DOMAIN")
 	enableAutoCert := config.Config.GetBool("WEBSERVICE.ENABLE_AUTOCERT")
 	
-	
-	
 	var setupConfig setup.Config
 	
 	susslogger.Log().Infof("PORT:%s", port)
 	susslogger.Log().Infof("ENABLE_AUTOCERT:%v", enableAutoCert)
 	susslogger.Log().Infof("DOMAIN:%s", domain)
 	
-	setupConfig.Address = fmt.Sprintf("%s:%s" , address, port)
+	setupConfig.Address = fmt.Sprintf("%s:%s", address, port)
 	setupConfig.InsecureHTTP = !enableAutoCert
-	
+	var scheme string
+	if setupConfig.InsecureHTTP {
+		scheme = "http"
+	} else {
+		scheme = "https"
+	}
 	svc := &service.SUSSService{}
 	api := setup.NewServer(svc, &setupConfig)
 	
@@ -77,11 +80,16 @@ func main() {
 		},
 	}
 	api.TLSConfig = cfg
+	
+	api.Routes.Static("/static", "./static")
+	api.Routes.Static("/openapi", "./openapi")
+	swaggerUrl := fmt.Sprintf("%s://%s:%s/openapi/suss-openapi.yml", scheme, address, port)
 
-	api.Routes.App.Static("/files", "./uploads", fiber.Static{
-		Compress:  true,
-		ByteRange: true,
-		Browse:    true,
+	// Place ReDoc file to render swagger specification document in the root GET of webservice
+	api.Routes.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.Render("index", fiber.Map{
+			"url": swaggerUrl,
+		})
 	})
 	
 	// Run the webservice

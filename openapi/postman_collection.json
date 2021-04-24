@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "f99d487d-1ffd-4aa4-ae20-afdef00ba64a",
+		"name": "SUSS",
+		"description": "Suspicious user session system detector",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New User Session Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Omid\",\n    \"unix_timestamp\": {{$timestamp}},\n    \"event_uuid\": \"{{$guid}}\",\n    \"ip_address\": \"{{$randomIP}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/event",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"event"
+					]
+				},
+				"description": "new event"
+			},
+			"response": [
+				{
+					"name": "Unexpected error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"quis Ut adipisicing veniam\",\n    \"unix_timestamp\": 78829897,\n    \"event_uuid\": \"eu consequat id Duis\",\n    \"ip_address\": \"Lorem\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/event",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"event"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{}"
+				},
+				{
+					"name": "Endpoint informations",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"quis Ut adipisicing veniam\",\n    \"unix_timestamp\": 78829897,\n    \"event_uuid\": \"eu consequat id Duis\",\n    \"ip_address\": \"Lorem\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/event",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"event"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"currentGeo\": {\n  \"lat\": 16900534.06324275,\n  \"lon\": -94695334.15833813,\n  \"radius\": -79521128\n },\n \"travelToCurrentGeoSuspicious\": true,\n \"travelFromCurrentGeoSuspicious\": true,\n \"precedingIpAccess\": {\n  \"lat\": 27810808.188638702,\n  \"lon\": 78269559.26846182,\n  \"radius\": -40836735,\n  \"speed\": -42545129.026703864,\n  \"ip\": \"veniam ipsum laboris\",\n  \"timestamp\": -35142920\n },\n \"subsequentIpAccess\": {\n  \"lat\": -22143852.71406445,\n  \"lon\": -49603734.73174457,\n  \"radius\": 84714080,\n  \"speed\": 37542116.4460887,\n  \"ip\": \"consectetur Excepteur ea\",\n  \"timestamp\": 13119506\n }\n}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000/v1",
+			"type": "string"
+		}
+	]
+}
