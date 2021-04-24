@@ -7,19 +7,35 @@ import (
 	"github.com/hojabri/suss/pkg/api/service"
 	"github.com/hojabri/suss/pkg/api/setup"
 	"github.com/hojabri/suss/pkg/config"
+	"github.com/hojabri/suss/pkg/maxmind"
 	"github.com/hojabri/suss/pkg/repository/sqlite"
 	"github.com/hojabri/suss/pkg/susslogger"
 	"golang.org/x/crypto/acme/autocert"
 )
 
+var err error
+
 func main() {
 
-	//Connect to db
-	err := sqlite.Connect()
+	// Connect to db
+	
+	err = sqlite.Connect()
 	if err != nil {
 		susslogger.Log().Fatalf("Can not connect to sqllite db: %s", err.Error())
 	}
 
+	// Connect to GeoLite2 db
+	err = maxmind.OpenDB()
+	if err != nil {
+		susslogger.Log().Fatalf("Can not connect to GeoLite2 db: %s", err.Error())
+	}
+	defer func() {
+		err = maxmind.CloseDB()
+		if err != nil {
+			susslogger.Log().Fatalf("Can not close GeoLite2 db: %s", err.Error())
+		}
+	}()
+	
 	address := config.Config.GetString("WEBSERVICE.ADDRESS")
 	port := config.Config.GetString("WEBSERVICE.PORT")
 	domain := config.Config.GetString("WEBSERVICE.DOMAIN")

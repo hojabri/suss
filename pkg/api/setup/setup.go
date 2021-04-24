@@ -101,16 +101,18 @@ func do(handler func(c *fiber.Ctx) *entities.Response) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		
 		resp := handler(c)
-		
-		err :=c.Status(resp.Code).JSON(resp)
+		err :=c.Status(resp.Code).JSON(resp.Body)
 		if err!=nil {
-			c.Status(http.StatusInternalServerError).JSON(entities.Response{
+			err = c.Status(http.StatusInternalServerError).JSON(entities.Response{
 				Code:     http.StatusInternalServerError,
 				Body:     err.Error(),
 				Title:    "InternalServerError",
 				Message:  err.Error(),
 				Instance: "InternalServerError",
 			})
+			if err != nil {
+				return err
+			}
 		}
 		
 		return nil

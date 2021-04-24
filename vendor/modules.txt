@@ -53,6 +53,11 @@ github.com/mitchellh/mapstructure
 ## explicit
 github.com/opentracing/opentracing-go
 github.com/opentracing/opentracing-go/log
+# github.com/oschwald/geoip2-golang v1.5.0
+## explicit
+github.com/oschwald/geoip2-golang
+# github.com/oschwald/maxminddb-golang v1.8.0
+github.com/oschwald/maxminddb-golang
 # github.com/pelletier/go-toml v1.2.0
 github.com/pelletier/go-toml
 # github.com/sirupsen/logrus v1.8.1

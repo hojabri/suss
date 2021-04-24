@@ -8,7 +8,7 @@ import (
 )
 
 type EventsRepository interface {
-	Create(event *entities.Event) (uuid.UUID, error)
+	Create(event *entities.Event) (*entities.Event, error)
 	Update(event *entities.Event) error
 	Delete(event *entities.Event) error
 	FindAll() []*entities.Event
@@ -26,7 +26,12 @@ type eventsRepository struct {
 
 func (e eventsRepository) PrecedingEvent(currentEvent *entities.Event) (*entities.Event, error) {
 	var event entities.Event
-	result := e.connection.Limit(1).Order("unix_timestamp desc").Find(&event, "username = ? AND unix_timestamp < ?", currentEvent.Username , currentEvent.UnixTimestamp)
+	result := e.connection.Limit(1).
+		Order("unix_timestamp desc").
+		Find(&event, "username = ? AND unix_timestamp < ? AND event_uuid!= ?",
+			currentEvent.Username ,
+			currentEvent.UnixTimestamp,
+			currentEvent.EventUuid)
 	
 	if result.Error!=nil {
 		return nil, result.Error
@@ -39,7 +44,12 @@ func (e eventsRepository) PrecedingEvent(currentEvent *entities.Event) (*entitie
 
 func (e eventsRepository) SubsequentEvent(currentEvent *entities.Event) (*entities.Event, error) {
 	var event entities.Event
-	result := e.connection.Limit(1).Order("unix_timestamp").Find(&event, "username = ? AND unix_timestamp > ?", currentEvent.Username , currentEvent.UnixTimestamp)
+	result := e.connection.Limit(1).
+		Order("unix_timestamp").
+		Find(&event, "username = ? AND unix_timestamp > ? AND event_uuid!= ?",
+			currentEvent.Username ,
+			currentEvent.UnixTimestamp,
+			currentEvent.EventUuid)
 	
 	if result.Error!=nil {
 		return nil, result.Error
@@ -63,15 +73,26 @@ func (e eventsRepository) LastEvent(username string) (*entities.Event, error) {
 	return nil, nil
 }
 
-func (e eventsRepository) Create(event *entities.Event) (uuid.UUID, error) {
+func (e eventsRepository) Create(event *entities.Event) (*entities.Event, error) {
+	//we should check existence before saving to DB
 	
-	//TODO: if event_uuid is unique per event? if so, we should check existence before saving to DB
+	findEvent, err := e.FindByID(event.EventUuid)
+	if err !=nil {
+		return nil, err
+	}
 	
+	// If exists, we don't save and return the existing event information
+	if findEvent !=nil {
+		return findEvent, nil
+	}
+	
+	// If not, create new event
+	event.EventUuid = uuid.New()
 	result := e.connection.Create(&event)
 	if result.Error != nil {
-		return [16]byte{}, result.Error
+		return nil, result.Error
 	}
-	return event.ID, nil
+	return event, nil
 }
 
 func (e eventsRepository) Update(event *entities.Event) error {
@@ -92,7 +113,7 @@ func (e eventsRepository) FindAll() []*entities.Event {
 
 func (e eventsRepository) FindByID(eventID uuid.UUID) (*entities.Event, error) {
 	var event entities.Event
-	result := e.connection.Find(&event, "id = ?", eventID)
+	result := e.connection.Find(&event, "event_uuid = ?", eventID)
 
 	if result.Error!=nil {
 		return nil, result.Error
@@ -105,7 +126,7 @@ func (e eventsRepository) FindByID(eventID uuid.UUID) (*entities.Event, error) {
 
 func (e eventsRepository) DeleteByID(eventID uuid.UUID) error {
 	screen := entities.Event{}
-	screen.ID = eventID
+	screen.EventUuid = eventID
 	result := e.connection.Delete(&screen)
 	return result.Error
 }

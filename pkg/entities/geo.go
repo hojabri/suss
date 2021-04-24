@@ -7,7 +7,7 @@ import (
 type Geo struct {
 	Lat    float64 `json:"lat"`
 	Lon    float64 `json:"lon"`
-	Radius int     `json:"radius"`
+	Radius uint16     `json:"radius"`
 }
 
 func (g *Geo) Validate() error {

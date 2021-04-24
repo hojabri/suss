@@ -8,6 +8,7 @@ require (
 	github.com/gofiber/template v1.6.8
 	github.com/google/uuid v1.2.0
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.7.1
 	github.com/valyala/fasthttp v1.23.0

@@ -1,3 +1,10 @@
+# Maximum non-suspicious speed of movement (in MPH) e.g. 500 Mile per Hour
+SUSPICIOUS_THRESHOLD: 500
+# Detection mode either Optimistic, Normal or Pessimistic
+# Optimistic:   will deduct accuracy radius from distance
+# Normal:       ignore accuracy radius
+# Pessimistic:  will add accuracy radius to distance
+DETECTION_MODE: "Optimistic"
 WEBSERVICE:
   ADDRESS: 0.0.0.0
   PORT: 5000
