@@ -1,0 +1,7 @@
+WEBSERVICE:
+  ADDRESS: 0.0.0.0
+  PORT: 5000
+  DOMAIN: localhost
+  ENABLE_AUTOCERT: false
+DB:
+  GORM_LOG_LEVEL: info

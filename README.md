@@ -1,2 +1,2 @@
-# suss
+# SUSS
 Suspicious user session system

@@ -1,0 +1,7 @@
+WEBSERVICE:
+  ADDRESS: 0.0.0.0
+  PORT: 443
+  DOMAIN: example.com
+  ENABLE_AUTOCERT: true
+DB:
+  GORM_LOG_LEVEL: error
