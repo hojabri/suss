@@ -48,7 +48,7 @@ func (s SUSSService) NewUserSessionEvent(c *fiber.Ctx) *entities.Response {
 		}
 	}
 	
-	geoInfo, err := maxmind.GetGeoInfo(newEvent.IpAddress)
+	geoInfo, err := maxmind.GetIpLocationInfo(newEvent.IpAddress)
 	if err != nil {
 		susslogger.Log().Error(err)
 		return &entities.Response{
@@ -70,7 +70,7 @@ func (s SUSSService) NewUserSessionEvent(c *fiber.Ctx) *entities.Response {
 		Radius:        geoInfo.Radius,
 	}
 	
-	// Insert newEvent into db (will return the same event, if event_uuid already exists in the DB)
+	// Insert newEvent into db (will return the same event, if event_uuid already exists in the CityDB)
 	event, err = EventsRepository.Create(event)
 	if err != nil {
 		return &entities.Response{

@@ -25,12 +25,12 @@ func main() {
 	}
 	
 	// Connect to GeoLite2 db
-	err = maxmind.OpenDB()
+	err = maxmind.OpenCityDB()
 	if err != nil {
 		susslogger.Log().Fatalf("Can not connect to GeoLite2 db: %s", err.Error())
 	}
 	defer func() {
-		err = maxmind.CloseDB()
+		err = maxmind.CloseCityDB()
 		if err != nil {
 			susslogger.Log().Fatalf("Can not close GeoLite2 db: %s", err.Error())
 		}
