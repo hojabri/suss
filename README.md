@@ -1,53 +1,53 @@
 # SUSS
 Suspicious user session system
 
-This service, detects suspicious user logins, based on login location and, the time spent from the last login.
-It assumes the maximum speed of possible movement of 500 Miles per hour (configurable in the config files) if the location of use is changed while login.
-Location is extracted by looking up in a Geo DB (from Maxmind).
+This service, detects suspicious user logins, based on login location and, the time spent from the last login attempt.
+It assumes the maximum speed of possible movement of the user, 500 Miles per hour (which is configurable in the config files) if the user location is changed between the logins.
+Location is extracted by looking up user IP in a Geo DB (from Maxmind).
 
 ## Instructions
 
 1. Make sure you have Go installed ([download](https://golang.org/dl/)).
-2. To build an executable binary file, type `make build` in a command line terminal. This will build and create `susswebservice` file.
-3. To build and run the docker package container for this application, type in the terminal: ``make docker-up``
-4. To run unit tests, type in the terminal: ``make test``
+2. To build an executable binary file, run `make build` in a command line terminal. This will build and create `susswebservice` file.
+3. To build and run the docker package container for this application, run ``make docker-up`` in the terminal. 
+4. To run unit tests, run  in the ``make test`` terminal. 
 
 ## Configuration:
-- There are two versions of configurations file by default: `dev` and `production`, but you can create as many configuration file with any name. To use a specific config file before running the application, specify `MODE` environment variable. for example `MODE=dev`, `MODE=production` or `MODE=your_config_file`. This will tell the application to look for `dev.yaml`, `production.yaml` or `your_config_file.yaml` file and reads configurations from that file.
-- Configuration files are located under ``configs`` directory.
-- Format of the configuration file is YAML type.
+- There are two versions of configuration files by default: `dev` and `prod`, but you can create as many configuration files as you want, with any name. To use a specific config file before running the application, specify `MODE` environment variable. for example `MODE=dev`, `MODE=prod` or `MODE=your_config_file`. This will tell the application to look for `dev.yaml`, `prod.yaml` or `your_config_file.yaml` file and reads the configurations from that file.
+- Configuration files are located under ``configs`` folder.
+- Format of the configuration file is YAML.
 
 #### SUSPICIOUS_THRESHOLD:
 
-The maximum speed of supposed a use can move in the earth between two logins. 
+The maximum speed which a user can move in the earth between two logins. 
 
 #### DETECTION_MODE:
 
-It is used how to determine a suspicious login according to distance and speed.
-Detection mode either Optimistic, Normal or Pessimistic.
+Indicates the way of determining a suspicious login according to distance and speed.
+Detection mode can either be Optimistic, Normal or Pessimistic.
 
-- _Optimistic_:   will deduct accuracy radius from distance
+- _Optimistic_:   will deduct accuracy radius of login location coordination from distance
 - _Normal_:       ignore accuracy radius
 - _Pessimistic_:  will add accuracy radius to distance
 
 #### GEO_CITY_DB:
-The file name of GEO CITY DB. (Please download the latest version from https://dev.maxmind.com/geoip/geoip2/geolite2/)
-It located under the ``geodb`` folder.
+The file name of GEO DB. (Please download the latest version from https://dev.maxmind.com/geoip/geoip2/geolite2/)
+It is located under the ``geodb`` folder.
 
 #### WEBSERVICE:
 
 This contains some key/value configuration of the webservice.
-- PORT: port number of webservice
-- DOMAIN: domain name. it is used for get a valid ssl certification from letencrypt website (https://letsencrypt.org/). To use this feature, we need to host the webservice in a registered domain.
-- ENABLE_AUTOCERT: it indicates whether we want to enable auto certificate from letsencrypt site or not. Don't make it enable, unless you host the webservice in a registered domain.
+- PORT: port number of the webservice
+- DOMAIN: domain name. it is used to get a valid SSL certification from letsencrypt website (https://letsencrypt.org/). To use this feature, you need to host the webservice in a registered domain.
+- ENABLE_AUTOCERT: it indicates whether we want to enable auto certificate from letsencrypt site or not. Don't make it true, unless you host the webservice in a registered domain.
 
 #### DB:
-- GORM_LOG_LEVEL: the log level of GORM (ORM of the db), if set to `info` it will print all SQL queries, while running. if set to `error`, it only prints GORM related errors in the log.
+- GORM_LOG_LEVEL: the log level of GORM (ORM library to access to the sqlite), if it is set to `info` it will print all SQL queries, while running. if it is set to `error`, it only prints GORM related errors in the log terminal.
 
 ## How to run
-1- Build and run locally:
-- Build the application (read instructions part)
-- In the terminal type:
+#### Build and run locally:
+- Build the application (read the instructions section)
+- Run this command in the terminal:
 ```
 MODE=dev ./susswebservice
 ```
@@ -71,10 +71,10 @@ INFO[2021-04-25T13:25:46.980799+03:00] Insecure HTTP
  └───────────────────────────────────────────────────┘ 
 ```
 
-2- Run in a docker container:
+#### Run in a docker container:
 
 - Build and run docker container (`make docker-up`)
-- Docker will run in the background and, you can then use the webservice.
+- Docker will run in the background and, then you can use the webservice.
 
 ### Consuming the webservice
 
@@ -82,12 +82,12 @@ INFO[2021-04-25T13:25:46.980799+03:00] Insecure HTTP
 _Note: Make sure the port 5000 is already free in the hosting environment._
   ![SUSS home page](https://raw.githubusercontent.com/hojabri/suss/main/static/suus_first_page.png)  
   
-This is the swagger file documentation of the webservice.
+This is the swagger documentation of the webservice.
 In this page you can also download the swagger file.
 
-- To test the webservice in Postman tools, there already a ready to use Postman collection file, named `postman_collection.json` under the `openapi` folder. Simply import it to postman, and call the webservice endpoints.
+- To test the webservice in the Postman tool, there is already a ready-to-use Postman collection file, named `postman_collection.json` under the `openapi` folder. Simply import it to the postman, and call the webservice endpoints.
 
-- At the moment, the only endpoint implemented is:
+- At the moment, the only implemented endpoint is:
 ```POST http://localhost:5000/v1/event```
   
 - Request body format:
@@ -129,9 +129,9 @@ In this page you can also download the swagger file.
 }
 ```
 
-- After calling the endpoint, with POST method, it checks the ``event_uuid`` value, and the application assumes this value as it own primary key in the events table. So for creating a new login event, you should pass a unique uuid, otherwise it will use the previously saved record for that event.
-- To check a previously saved event, among the preceding or subsequent event, you can use the uuid for that event which is already saved.
-- The maximum allowed speed which the application judges the suspicious login can be configured in the config files, but the default value is 500 Miles per hour.
+- After calling the endpoint, with POST method, it checks the ``event_uuid`` value, and the application assumes this value as it own primary key in the events table. So for creating a new login event, you should pass a unique UUID, otherwise it will use the previously saved record for that event.
+- To check a previously saved event, among the preceding or subsequent events, you can use the already assigned UUID for that event.
+- The maximum allowed speed which the application judges the suspicious login, can be configured in the config files, but the default value is set to 500 Miles per hour.
 
 ### Authentication
 
@@ -145,6 +145,13 @@ For example:
 
 Then add two headers `API_KEY` and `API_PASSWORD` in the POST method:
 ![SUSS home page](https://raw.githubusercontent.com/hojabri/suss/main/static/suss_authentication.png)
+
+If you don't want to use authentication for the webservice, you can leave these variables empty, and run the application:
+
+```
+ MODE=dev ./susswebservice
+```
+
 
 ### External libraries:
 - go-fiber (https://github.com/gofiber/fiber)
