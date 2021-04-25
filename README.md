@@ -80,6 +80,6 @@ INFO[2021-04-25T13:25:46.980799+03:00] Insecure HTTP
 
 - To check if the webservice is running, call this utl in a browser (http://127.0.0.1:5000).
 _Note: Make sure the port 5000 is already free in the hosting environment._
-  ![SUSS home page](https://github.com/hojabri/suss/static/[branch]/suss_first_page.png?raw=true)  
+  ![SUSS home page](https://github.com/hojabri/suss/static/main/suss_first_page.png?raw=true)  
 This product includes GeoLite2 data created by MaxMind, available from
 https://www.maxmind.com
