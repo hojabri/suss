@@ -144,7 +144,7 @@ For example:
 ```
 
 Then add two headers `API_KEY` and `API_PASSWORD` in the POST method:
-![SUSS home page](https://raw.githubusercontent.com/hojabri/suss/main/static/suus_authentication.png)
+![SUSS home page](https://raw.githubusercontent.com/hojabri/suss/main/static/suss_authentication.png)
 
 
 
