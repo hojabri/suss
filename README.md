@@ -133,10 +133,10 @@ In this page you can also download the swagger file.
 - To check a previously saved event, among the preceding or subsequent event, you can use the uuid for that event which is already saved.
 - The maximum allowed speed which the application judges the suspicious login can be configured in the config files, but the default value is 500 Miles per hour.
 
-## Authentication
+### Authentication
 
-This webservice can check for authentication, based on API_KEY and API_PASSWORD fields in the request POST call. The
-To enable authentication, you can fill SERVER_API_KEY and SERVER_API_PASSWORD environment variables, before running the application.
+This webservice can check for authentication, based on `API_KEY` and `API_PASSWORD` fields in the request POST call. The
+To enable authentication, you can fill `SERVER_API_KEY` and `SERVER_API_PASSWORD` environment variables, before running the application.
 For example:
 
 ```
@@ -146,7 +146,33 @@ For example:
 Then add two headers `API_KEY` and `API_PASSWORD` in the POST method:
 ![SUSS home page](https://raw.githubusercontent.com/hojabri/suss/main/static/suss_authentication.png)
 
+### External libraries:
+- go-fiber (https://github.com/gofiber/fiber)
+  
+Fiber is an Express inspired web framework built on top of Fasthttp, the fastest HTTP engine for Go. Designed to ease things up for fast development with zero memory allocation and performance in mind.
+  
+- logrus (https://github.com/sirupsen/logrus):
 
+To enable full featured lgging.
 
+- geoip2-golang (https://github.com/oschwald/geoip2-golang)
+
+To read from geoip db file, download from maxmind.
+  
+- gorm (https://gorm.io/index.html)
+
+golang ORM library to connect to sqllite
+
+- go-sqlite3 (https://github.com/mattn/go-sqlite3)
+
+sqlite3 driver for go using database/sql
+
+- viper (https://github.com/spf13/viper)
+
+Viper is a complete configuration solution for Go applications including 12-Factor apps. It is designed to work within an application, and can handle all types of configuration needs and formats.
+
+  
+
+_GeoLite2:
 This product includes GeoLite2 data created by MaxMind, available from
-https://www.maxmind.com
+https://www.maxmind.com_
