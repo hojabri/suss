@@ -81,5 +81,72 @@ INFO[2021-04-25T13:25:46.980799+03:00] Insecure HTTP
 - To check if the webservice is running, call this utl in a browser (http://127.0.0.1:5000).
 _Note: Make sure the port 5000 is already free in the hosting environment._
   ![SUSS home page](https://raw.githubusercontent.com/hojabri/suss/main/static/suus_first_page.png)  
+  
+This is the swagger file documentation of the webservice.
+In this page you can also download the swagger file.
+
+- To test the webservice in Postman tools, there already a ready to use Postman collection file, named `postman_collection.json` under the `openapi` folder. Simply import it to postman, and call the webservice endpoints.
+
+- At the moment, the only endpoint implemented is:
+```POST http://localhost:5000/v1/event```
+  
+- Request body format:
+```json
+{
+  "username": "Omid",
+  "unix_timestamp": 1619268172,
+  "event_uuid": "fa05a9bf-bf5c-4db2-88f7-dd764d2cf1f7",
+  "ip_address": "125.219.64.174"
+}
+```
+
+- Response body format:
+```json
+{
+    "currentGeo": {
+        "lat": 35.1865,
+        "lon": 138.6628,
+        "radius": 200
+    },
+    "travelToCurrentGeoSuspicious": false,
+    "travelFromCurrentGeoSuspicious": false,
+    "precedingIpAccess": {
+        "lat": 34.7732,
+        "lon": 113.722,
+        "radius": 1000,
+        "speed": 38.07041358517798,
+        "ip": "125.219.64.174",
+        "timestamp": 1619281807
+    },
+    "subsequentIpAccess": {
+        "lat": 0,
+        "lon": 0,
+        "radius": 0,
+        "speed": 0,
+        "ip": "",
+        "timestamp": 0
+    }
+}
+```
+
+- After calling the endpoint, with POST method, it checks the ``event_uuid`` value, and the application assumes this value as it own primary key in the events table. So for creating a new login event, you should pass a unique uuid, otherwise it will use the previously saved record for that event.
+- To check a previously saved event, among the preceding or subsequent event, you can use the uuid for that event which is already saved.
+- The maximum allowed speed which the application judges the suspicious login can be configured in the config files, but the default value is 500 Miles per hour.
+
+## Authentication
+
+This webservice can check for authentication, based on API_KEY and API_PASSWORD fields in the request POST call. The
+To enable authentication, you can fill SERVER_API_KEY and SERVER_API_PASSWORD environment variables, before running the application.
+For example:
+
+```
+ SERVER_API_KEY="my_api_key" SERVER_API_PASSWORD="my_api_password"  MODE=dev ./susswebservice
+```
+
+Then add two headers `API_KEY` and `API_PASSWORD` in the POST method:
+![SUSS home page](https://raw.githubusercontent.com/hojabri/suss/main/static/suus_authentication.png)
+
+
+
 This product includes GeoLite2 data created by MaxMind, available from
 https://www.maxmind.com
